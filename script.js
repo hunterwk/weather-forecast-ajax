@@ -15,7 +15,6 @@ $(function () {
         for (let i=0; i < cities.length; i++){
             let liEl = $("<li>")
             liEl.text(cities[i])
-            console.log(liEl)
             liEl.addClass("list-group-item list-group-item-action")
             liEl.on("click", function() {
                 cityWeather(liEl.text())
@@ -63,6 +62,38 @@ $(function () {
                 $("#selected-uv-index").text("UV index: " + uvData.value);
             });
 
+        })
+        weeklyForecast(city);
+    }
+    function weeklyForecast(city) {
+        let queryUrl =
+            "https://api.openweathermap.org/data/2.5/forecast?q=" +
+            city +
+            "&units=imperial&appid=" +
+            apiKey;
+        $.ajax({
+        url: queryUrl,
+        method: "GET"
+        }).then(function (weeklyData){
+            $("#five-day").empty()
+            
+            console.log(dayjs(weeklyData.list[0].dt_txt).format("M/D/YYYY"))
+            for (let i=0; i <= weeklyData.list.length; i += 8) {
+                //first gather variables to print info for 5 day forecast
+                var forecastTitle = $("<h5>").text(dayjs(weeklyData.list[i].dt_txt).format("M/D/YYYY"))
+                var iconCode = weeklyData.list[i].weather[0].icon
+                var iconUrl = "http://openweathermap.org/img/wn/"+ iconCode +".png";
+                var forecastIcon = $("<img>").attr("src", iconUrl)
+                var forecastTemp = $("<p>").text(weeklyData.list[i].main.temp)
+                var forecastHumidity = $("<p>").text(weeklyData.list[i].main.humidity)
+
+                
+
+
+                 
+                $("#five-day").append(forecastTitle, forecastIcon, forecastTemp, forecastHumidity)
+            }
+            
         })
 
     }
