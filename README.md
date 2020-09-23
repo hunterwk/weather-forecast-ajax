@@ -33,17 +33,3 @@ Iteration 3 (5-day forecast):
 - build url for 5-day forecast query
 - display forecast details on the page
 
-
-base: "stations"
-clouds: {all: 20}
-cod: 200
-coord: {lon: -117.16, lat: 32.72}
-dt: 1600744325
-id: 5391811
-main: {temp: 68.14, feels_like: 69.03, temp_min: 66, temp_max: 71.6, pressure: 1014, …}
-name: "San Diego"
-sys: {type: 1, id: 5771, country: "US", sunrise: 1600695392, sunset: 1600739190}
-timezone: -25200
-visibility: 10000
-weather: [{…}]
-wind: {speed: 4.7, deg: 300}
