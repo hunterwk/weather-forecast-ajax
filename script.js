@@ -2,12 +2,14 @@
 $(function () {
     // Checks local storage for stored city variables and if it exists
     // runs the code to display the information from previous search
+    var apiKey = "ae72ba1c8b5248666070d873a02673f9";
     function init() {
         var localCities = JSON.parse(window.localStorage.getItem("cities"));
         if (!localCities){
             return;
         }
         renderCities(localCities);
+        cityWeather(localCities[localCities.length -1]);
     }; 
     init();
     function renderCities(cities) {
@@ -24,7 +26,7 @@ $(function () {
 
     }
 
-    var apiKey = "ae72ba1c8b5248666070d873a02673f9";
+    
     //initial function to call the temp,humidity and wind speed
     function cityWeather(city) {
         var queryUrl =
@@ -80,18 +82,20 @@ $(function () {
             console.log(dayjs(weeklyData.list[0].dt_txt).format("M/D/YYYY"))
             for (let i=0; i <= weeklyData.list.length; i += 8) {
                 //first gather variables to print info for 5 day forecast
-                var forecastTitle = $("<h5>").text(dayjs(weeklyData.list[i].dt_txt).format("M/D/YYYY"))
+                var forecastTitle = $("<h6>").text(dayjs(weeklyData.list[i].dt_txt).format("M/D/YYYY"))
                 var iconCode = weeklyData.list[i].weather[0].icon
                 var iconUrl = "http://openweathermap.org/img/wn/"+ iconCode +".png";
                 var forecastIcon = $("<img>").attr("src", iconUrl)
-                var forecastTemp = $("<p>").text(weeklyData.list[i].main.temp)
-                var forecastHumidity = $("<p>").text(weeklyData.list[i].main.humidity)
-
+                var forecastTemp = $("<p>").text(weeklyData.list[i].main.temp +"°F")
+                var forecastHumidity = $("<p>").text("Humidity: " + weeklyData.list[i].main.humidity)
+                var forecastCardBody = $("<div class ='card-body'>")
+                forecastCardBody.append(forecastTitle, forecastIcon, forecastTemp, forecastHumidity)
+                var forecastCard = $("<div class ='card bg-primary col-auto text-white'>")
+                forecastCard.append(forecastCardBody)
                 
 
-
                  
-                $("#five-day").append(forecastTitle, forecastIcon, forecastTemp, forecastHumidity)
+                $("#five-day").append(forecastCard)
             }
             
         })
@@ -107,8 +111,9 @@ $(function () {
         if (city === "") {
             return;
           }
-        cityWeather(city)
+        
         savedCity(city)
+        cityWeather(city)
     })
     function savedCity(city) {
         var cities = JSON.parse(window.localStorage.getItem("cities"))
